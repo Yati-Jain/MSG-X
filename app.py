@@ -98,7 +98,74 @@ if uploaded_file is not None:
             st.pyplot(fig)
 
         with col2:
-            st.dataframe(new_df)    
+            st.dataframe(new_df)  
+
+
+    # ---------------- TIME DIFFERENCE ANALYSIS ---------------- #
+    st.title("Reply Behaviour Pattern")
+# Remove group notifications
+    df_time = df[df['user'] != 'group_notification'].copy()
+
+    df_time['date'] = pd.to_datetime(df_time['date'])
+    df_time = df_time.sort_values('date')
+
+    users = df_time['user'].unique()
+
+    if len(users) == 2:
+
+        reply_data = {users[0]: [], users[1]: []}
+
+        for i in range(1, len(df_time)):
+            prev_user = df_time.iloc[i-1]['user']
+            curr_user = df_time.iloc[i]['user']
+
+            if prev_user != curr_user:
+                diff = (
+                    df_time.iloc[i]['date'] - df_time.iloc[i-1]['date']
+                ).total_seconds() / 60
+
+                reply_data[curr_user].append(diff)
+
+        def categorize(times):
+            categories = {
+                "Under 1 min": 0,
+                "1-5 mins": 0,
+                "5-30 mins": 0,
+                "30+ mins": 0
+            }
+
+            for t in times:
+                if t <= 1:
+                    categories["Under 1 min"] += 1
+                elif t <= 5:
+                    categories["1-5 mins"] += 1
+                elif t <= 30:
+                    categories["5-30 mins"] += 1
+                else:
+                    categories["30+ mins"] += 1
+
+            return categories
+
+        
+
+        col1, col2 = st.columns(2)
+
+        for idx, user in enumerate(users):
+            behaviour = categorize(reply_data[user])
+
+            fig, ax = plt.subplots()
+            ax.bar(behaviour.keys(), behaviour.values())
+            plt.xticks(rotation=45)
+
+            if idx == 0:
+                col1.pyplot(fig)
+                col1.subheader(user)
+            else:
+                col2.pyplot(fig)
+                col2.subheader(user)
+
+    else:
+        st.warning("Works only for 2-person chats.")          
     # word cloud
     st.title('Word Cloud')
     df_wc = helper.Create_wordCloud(selected_user, df) 
