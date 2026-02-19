@@ -165,7 +165,25 @@ if uploaded_file is not None:
                 col2.subheader(user)
 
     else:
-        st.warning("Works only for 2-person chats.")          
+        st.warning("Works only for 2-person chats.")   
+
+    # conversation effort 
+        
+    st.title("Conversation Effort Analysis")
+    st.markdown("""
+                 Effort Score = (Message Share × 30) + (Normalized Message Length × 20) +(Question Rate × 20) +(Initiation Rate × 30) """)
+
+    effort_df = helper.conversation_effort(df)
+
+    st.dataframe(effort_df)
+    top5 = effort_df.head(5)
+    fig, ax = plt.subplots()
+    ax.bar(top5['user'], top5['Effort Score'])
+    ax.set_ylabel("Effort Score (0–100)")
+    plt.xticks(rotation=90)
+    
+    st.pyplot(fig)
+           
     # word cloud
     st.title('Word Cloud')
     df_wc = helper.Create_wordCloud(selected_user, df) 

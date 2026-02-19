@@ -102,3 +102,56 @@ def daily_timeline(selected_user,df):
 
     return daily_timeline
 
+# conversation effort 
+def conversation_effort(df):
+
+    df = df[df['user'] != 'group_notification'].copy()
+    df['date'] = pd.to_datetime(df['date'])
+    df = df.sort_values('date')
+
+    users = df['user'].unique()
+    total_messages = len(df)
+
+    df['only_date'] = df['date'].dt.date
+    total_days = df['only_date'].nunique()
+
+    effort_results = []
+
+    max_avg_length = df['message'].apply(len).mean()
+
+    for user in users:
+
+        user_df = df[df['user'] == user]
+        msg_count = len(user_df)
+
+        # Message Share
+        message_share = msg_count / total_messages
+
+        # Avg Length
+        avg_length = user_df['message'].apply(len).mean()
+
+        # Question Rate
+        question_rate = user_df['message'].str.count('\?').sum() / msg_count
+
+        # Initiation Rate
+        initiations = 0
+        for date in df['only_date'].unique():
+            day_df = df[df['only_date'] == date]
+            if day_df.iloc[0]['user'] == user:
+                initiations += 1
+
+        initiation_rate = initiations / total_days
+
+        # Effort Score (0–100)
+        effort_score = (
+            message_share * 30 +
+            (avg_length / max_avg_length) * 20 +
+            question_rate * 20 +
+            initiation_rate * 30
+        ) 
+
+        effort_results.append([user, round(effort_score, 2)])
+
+    effort_df = pd.DataFrame(effort_results, columns=['user', 'Effort Score'])
+
+    return effort_df
