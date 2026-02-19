@@ -4,9 +4,7 @@ import matplotlib.pyplot as plt
 
 import preprocessor, helper
 
-import streamlit as st
 
-import streamlit as st
 
 
 st.set_page_config(
