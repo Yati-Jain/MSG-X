@@ -176,6 +176,11 @@ if uploaded_file is not None:
     effort_df = helper.conversation_effort(df)
 
     st.dataframe(effort_df)
+    st.markdown("""\n
+                If score is 80-100 -> high effort\n
+                   If score is 50- 80 -> moderate effort\n
+                   If score is 30- 50 -> low effort\n
+                   If score is below 30 ->very low effort""")
     top5 = effort_df.head(5)
     fig, ax = plt.subplots()
     ax.bar(top5['user'], top5['Effort Score'])
