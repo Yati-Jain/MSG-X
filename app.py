@@ -4,6 +4,18 @@ import matplotlib.pyplot as plt
 
 import preprocessor, helper
 
+import streamlit as st
+
+import streamlit as st
+
+
+st.set_page_config(
+    page_title="MSG-X",
+    page_icon="logo.jpeg"
+)
+
+
+
  
 st.sidebar.title("Watsapp chat analyzer")
 
