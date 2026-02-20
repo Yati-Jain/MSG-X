@@ -11,7 +11,7 @@ def preprocess(data):
     df = pd.DataFrame({'user_message': messages, 'message_date': dates})
 
     # Clean unicode narrow space
-    df['message_date'] = df['message_date'].str.replace('\u202f', ' ', regex=False)
+    df['message_date'] = df['message_date'].astype(str).str.replace('\u202f', ' ', regex=False)
 
     # Convert to datetime
     df['message_date'] = pd.to_datetime(
