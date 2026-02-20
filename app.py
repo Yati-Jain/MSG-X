@@ -4,6 +4,16 @@ import matplotlib.pyplot as plt
 
 import preprocessor, helper
 
+
+
+
+st.set_page_config(
+    page_title="MSG-X",
+    page_icon="logo.jpeg"
+)
+
+
+
  
 st.sidebar.title("Watsapp chat analyzer")
 
@@ -86,7 +96,8 @@ if uploaded_file is not None:
             st.pyplot(fig)
 
         with col2:
-            st.dataframe(new_df) 
+            st.dataframe(new_df)  
+
 
     # ---------------- TIME DIFFERENCE ANALYSIS ---------------- #
     st.title("Reply Behaviour Pattern")
@@ -152,7 +163,30 @@ if uploaded_file is not None:
                 col2.subheader(user)
 
     else:
-        st.warning("Works only for 2-person chats.")           
+        st.warning("Works only for 2-person chats.")   
+
+    # conversation effort 
+        
+    st.title("Conversation Effort Analysis")
+    st.markdown("""
+                 Effort Score = (Message Share × 30) + (Normalized Message Length × 20) +(Question Rate × 20) +(Initiation Rate × 30) """)
+
+    effort_df = helper.conversation_effort(df)
+
+    st.dataframe(effort_df)
+    st.markdown("""\n
+                If score is 80-100 -> high effort\n
+                   If score is 50- 80 -> moderate effort\n
+                   If score is 30- 50 -> low effort\n
+                   If score is below 30 ->very low effort""")
+    top5 = effort_df.head(5)
+    fig, ax = plt.subplots()
+    ax.bar(top5['user'], top5['Effort Score'])
+    ax.set_ylabel("Effort Score (0–100)")
+    plt.xticks(rotation=90)
+    
+    st.pyplot(fig)
+           
     # word cloud
     st.title('Word Cloud')
     df_wc = helper.Create_wordCloud(selected_user, df) 
