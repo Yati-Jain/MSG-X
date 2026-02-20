@@ -4,16 +4,6 @@ import matplotlib.pyplot as plt
 
 import preprocessor, helper
 
-
-
-
-st.set_page_config(
-    page_title="MSG-X",
-    page_icon="logo.jpeg"
-)
-
-
-
  
 st.sidebar.title("Watsapp chat analyzer")
 
@@ -96,16 +86,15 @@ if uploaded_file is not None:
             st.pyplot(fig)
 
         with col2:
-            st.dataframe(new_df)  
-
+            st.dataframe(new_df) 
 
     # ---------------- TIME DIFFERENCE ANALYSIS ---------------- #
     st.title("Reply Behaviour Pattern")
 # Remove group notifications
     df_time = df[df['user'] != 'group_notification'].copy()
 
-    df_time['date'] = pd.to_datetime(df_time['date'])
-    df_time = df_time.sort_values('date')
+    df_time['message_date'] = pd.to_datetime(df_time['message_date'])
+    df_time = df_time.sort_values('message_date')
 
     users = df_time['user'].unique()
 
@@ -119,7 +108,7 @@ if uploaded_file is not None:
 
             if prev_user != curr_user:
                 diff = (
-                    df_time.iloc[i]['date'] - df_time.iloc[i-1]['date']
+                    df_time.iloc[i]['message_date'] - df_time.iloc[i-1]['message_date']
                 ).total_seconds() / 60
 
                 reply_data[curr_user].append(diff)
@@ -163,30 +152,7 @@ if uploaded_file is not None:
                 col2.subheader(user)
 
     else:
-        st.warning("Works only for 2-person chats.")   
-
-    # conversation effort 
-        
-    st.title("Conversation Effort Analysis")
-    st.markdown("""
-                 Effort Score = (Message Share × 30) + (Normalized Message Length × 20) +(Question Rate × 20) +(Initiation Rate × 30) """)
-
-    effort_df = helper.conversation_effort(df)
-
-    st.dataframe(effort_df)
-    st.markdown("""\n
-                If score is 80-100 -> high effort\n
-                   If score is 50- 80 -> moderate effort\n
-                   If score is 30- 50 -> low effort\n
-                   If score is below 30 ->very low effort""")
-    top5 = effort_df.head(5)
-    fig, ax = plt.subplots()
-    ax.bar(top5['user'], top5['Effort Score'])
-    ax.set_ylabel("Effort Score (0–100)")
-    plt.xticks(rotation=90)
-    
-    st.pyplot(fig)
-           
+        st.warning("Works only for 2-person chats.")           
     # word cloud
     st.title('Word Cloud')
     df_wc = helper.Create_wordCloud(selected_user, df) 
