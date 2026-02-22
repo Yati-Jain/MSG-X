@@ -44,7 +44,7 @@ emotional_words = [
 "ly","my","gn","miss","baby","love","jaan","cutu","love you",
 "cutie","hottie","sexy","bae","dear","mine","highness","majesty",
 "princess","queen","sweetu","sweetheart","bacha","mwa","mwaa",
-"muhaa","ji"
+"muhaa","ji","bbg","Bbg","Babygirl","babygirl"
 ]
 
 emotion_data = []
@@ -126,15 +126,11 @@ for user in df['user'].unique():
 # Create DataFrame
 jealous_df = pd.DataFrame(jealous_data, columns=["User", "Word", "Count"])
 
-st.subheader(" Jealousy Word Dataset")
-st.dataframe(jealous_df)
 
-st.subheader(" Overall Jealousy Count")
-st.write(overall_jealous_count)
 #---------------------------------------------------------------------
 
 # Romantic Emojis
-romantic_emojis = ["❤️","😘","😍","🥰","💋","💕","💖","💞"]
+romantic_emojis = ["❤️","😘","😍","🥰","💋","💕","💖","💞","🎀","💘","😻","😘","💗","💓","😳","🫣","🙈","😈","🌚","😽","😼","😏","😼","🍆","💦","🫦","🫶","🫰","🍑","😚","🥴","🥺","🥹","🤭","💑","👪","🌝"]
 
 # Remove system messages
 df = df[df['user'] != 'group_notification']
